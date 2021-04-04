@@ -25,11 +25,11 @@ class Notices {
 	/**
 	 * An array of notices.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var array
 	 */
-	private $notices = [];
+	protected $notices = [];
 
 	/**
 	 * Adds actions for the notices.

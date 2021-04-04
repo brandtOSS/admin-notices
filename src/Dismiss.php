@@ -21,29 +21,29 @@ class Dismiss {
 	/**
 	 * The notice-ID.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var string
 	 */
-	private $id;
+	protected $id;
 
 	/**
 	 * The prefix we'll be using for the option/user-meta.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var string
 	 */
-	private $prefix;
+	protected $prefix;
 
 	/**
 	 * The notice's scope. Can be "user" or "global".
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var string
 	 */
-	private $scope;
+	protected $scope;
 
 	/**
 	 * Constructor.
@@ -68,7 +68,7 @@ class Dismiss {
 	/**
 	 * Print the script for dismissing the notice.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @return void
 	 */
@@ -148,11 +148,11 @@ class Dismiss {
 	/**
 	 * Actually dismisses the notice.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @return void
 	 */
-	private function dismiss_notice() {
+	protected function dismiss_notice() {
 		if ( 'user' === $this->scope ) {
 			update_user_meta( get_current_user_id(), "{$this->prefix}_{$this->id}", true );
 			return;
