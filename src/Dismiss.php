@@ -78,7 +78,7 @@ class Dismiss {
 		$nonce = wp_create_nonce( 'wptrt_dismiss_notice_' . $this->id );
 		?>
 		<script>
-		window.addEventListener( 'load', function() {
+		(function( $ ) {
 			var dismissBtn  = document.querySelector( '#wptrt-notice-<?php echo esc_attr( $this->id ); ?> .notice-dismiss' );
 
 			// Add an event listener to the dismiss button.
@@ -96,7 +96,7 @@ class Dismiss {
 				httpRequest.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' )
 				httpRequest.send( postData );
 			});
-		});
+		})( jQuery );
 		</script>
 		<?php
 	}
