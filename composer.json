@@ -1,5 +1,5 @@
 {
-	"name"        : "wptrt/admin-notices",
+	"name"        : "brianhenryie/admin-notices",
 	"description" : "A class to create admin-notices for the WordPress dashboard.",
 	"keywords"    : [ "wordpress" ],
 	"homepage"    : "https://github.com/WPTRT/admin-notices",
