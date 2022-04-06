@@ -21,29 +21,29 @@ class Dismiss {
 	/**
 	 * The notice-ID.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var string
 	 */
-	private $id;
+	protected $id;
 
 	/**
 	 * The prefix we'll be using for the option/user-meta.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var string
 	 */
-	private $prefix;
+	protected $prefix;
 
 	/**
 	 * The notice's scope. Can be "user" or "global".
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var string
 	 */
-	private $scope;
+	protected $scope;
 
 	/**
 	 * Constructor.
@@ -66,39 +66,78 @@ class Dismiss {
 	}
 
 	/**
-	 * Print the script for dismissing the notice.
+	 * Register the script for dismissing the notice.
 	 *
-	 * @access private
 	 * @since 1.0
 	 * @return void
 	 */
-	public function print_script() {
+	public function register_script() {
+
+		// common-js
+
+		$handle = 'wptrt_dismiss_notice_' . $this->id;
+		$version = '1.0.3';
+
+		wp_register_script( $handle, '', array(), $version, false );
+		wp_enqueue_script( $handle );
+
+		$id = esc_attr($this->id);
 
 		// Create a nonce.
 		$nonce = wp_create_nonce( 'wptrt_dismiss_notice_' . $this->id );
-		?>
-		<script>
-		window.addEventListener( 'load', function() {
-			var dismissBtn  = document.querySelector( '#wptrt-notice-<?php echo esc_attr( $this->id ); ?> .notice-dismiss' );
 
-			// Add an event listener to the dismiss button.
-			dismissBtn.addEventListener( 'click', function( event ) {
-				var httpRequest = new XMLHttpRequest(),
-					postData    = '';
+		$admin_ajax_url = esc_url( admin_url( 'admin-ajax.php' ) );
 
-				// Build the data to send in our request.
-				// Data has to be formatted as a string here.
-				postData += 'id=<?php echo esc_attr( rawurlencode( $this->id ) ); ?>';
-				postData += '&action=wptrt_dismiss_notice';
-				postData += '&nonce=<?php echo esc_html( $nonce ); ?>';
+		$script = <<<EOD
+(function() {
+    MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
-				httpRequest.open( 'POST', '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>' );
-				httpRequest.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' )
-				httpRequest.send( postData );
-			});
-		});
-		</script>
-		<?php
+    var observer = new MutationObserver(function(mutations, observer) {
+        mutations.forEach(function(mutationRecord) {
+            if( mutationRecord.target.id === 'wptrt-notice-$id' ) {
+                mutationRecord.addedNodes.forEach( function( node ) {
+
+                    if( 'notice-dismiss' === node.className ) {
+
+                        var dismissBtn = node;
+
+                        // Add an event listener to the dismiss button.
+                        dismissBtn.addEventListener( 'click', function( event ) {
+                            var httpRequest = new XMLHttpRequest(),
+                                postData    = '';
+
+                            // Build the data to send in our request.
+                            // Data has to be formatted as a string here.
+                            postData += 'id=$id';
+                            postData += '&action=wptrt_dismiss_notice';
+                            postData += '&nonce=$nonce';
+
+                            httpRequest.open( 'POST', '$admin_ajax_url' );
+                            httpRequest.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' )
+                            httpRequest.send( postData );
+                            //the event occurred
+                        });
+
+                        observer.disconnect();
+                    }
+
+                });
+            }
+        })
+    });
+
+    // define what element should be observed by the observer
+    // and what types of mutations trigger the callback
+    observer.observe(document, {
+      subtree: true,
+      childList: true
+      //...
+    });
+})();
+EOD;
+
+		wp_add_inline_script($handle, $script );
+
 	}
 
 	/**
@@ -148,11 +187,11 @@ class Dismiss {
 	/**
 	 * Actually dismisses the notice.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @return void
 	 */
-	private function dismiss_notice() {
+	protected function dismiss_notice() {
 		if ( 'user' === $this->scope ) {
 			update_user_meta( get_current_user_id(), "{$this->prefix}_{$this->id}", true );
 			return;

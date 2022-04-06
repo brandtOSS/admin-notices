@@ -25,11 +25,11 @@ class Notices {
 	/**
 	 * An array of notices.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var array
 	 */
-	private $notices = [];
+	protected $notices = [];
 
 	/**
 	 * Adds actions for the notices.
@@ -44,7 +44,7 @@ class Notices {
 		add_action( 'admin_notices', [ $this, 'the_notices' ] );
 
 		// Print the script to the footer.
-		add_action( 'admin_footer', [ $this, 'print_scripts' ] );
+		add_action( 'admin_init', [ $this, 'register_scripts' ] );
 	}
 
 	/**
@@ -117,18 +117,19 @@ class Notices {
 	}
 
 	/**
-	 * Prints scripts for the notices.
+	 * Register scripts for the notices.
 	 *
+	 * @hooked admin_init
 	 * @access public
 	 * @since 1.0
 	 * @return void
 	 */
-	public function print_scripts() {
+	public function register_scripts() {
 		$notices = $this->get_all();
 
 		foreach ( $notices as $notice ) {
 			if ( $notice->show() ) {
-				$notice->dismiss->print_script();
+				$notice->dismiss->register_script();
 			}
 		}
 	}
