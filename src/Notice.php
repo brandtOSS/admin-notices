@@ -25,11 +25,11 @@ class Notice {
 	/**
 	 * The notice-ID.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var string
 	 */
-	private $id;
+	protected $id;
 
 	/**
 	 * The notice title.
@@ -43,20 +43,20 @@ class Notice {
 	/**
 	 * The notice message.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var string
 	 */
-	private $message;
+	protected $message;
 
 	/**
 	 * The notice title.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var string
 	 */
-	private $title;
+	protected $title;
 
 	/**
 	 * An instance of the \WPTRT\AdminNotices\Dismiss object.
@@ -70,11 +70,11 @@ class Notice {
 	/**
 	 * The notice arguments.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var array
 	 */
-	private $options = [
+	protected $options = [
 		'scope'         => 'global',
 		'type'          => 'info',
 		'alt_style'     => false,
@@ -86,11 +86,11 @@ class Notice {
 	/**
 	 * Allowed HTML in the message.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var array
 	 */
-	private $allowed_html = [
+	protected $allowed_html = [
 		'p'      => [],
 		'a'      => [
 			'href' => [],
@@ -104,11 +104,11 @@ class Notice {
 	/**
 	 * An array of allowed types.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @var array
 	 */
-	private $allowed_types = [
+	protected $allowed_types = [
 		'info',
 		'success',
 		'error',
@@ -282,11 +282,11 @@ class Notice {
 	/**
 	 * Evaluate if we're on the right place depending on the "screens" argument.
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 1.0
 	 * @return bool
 	 */
-	private function is_screen() {
+	protected function is_screen() {
 
 		// If screen is empty we want this shown on all screens.
 		if ( ! $this->options['screens'] || empty( $this->options['screens'] ) ) {
