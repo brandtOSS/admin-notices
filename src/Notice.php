@@ -32,6 +32,15 @@ class Notice {
 	private $id;
 
 	/**
+	 * The notice title.
+	 *
+	 * @access private
+	 * @since 1.0
+	 * @var string
+	 */
+	private title;
+
+	/**
 	 * The notice message.
 	 *
 	 * @access private
